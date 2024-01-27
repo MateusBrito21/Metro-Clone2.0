@@ -37,10 +37,13 @@ public class PlayerController : MonoBehaviour
     private float ballCounter;
     public Animator ballAnim;
 
+    public Transform bombPoint;
+    public GameObject bomb;
+    private PlayerAbilityTracker abillities;
     // Start is called before the first frame update
     void Start()
     {
-        
+        abillities = GetComponent<PlayerAbilityTracker>();
     }
 
     // Update is called once per frame (Dash)
@@ -53,7 +56,7 @@ public class PlayerController : MonoBehaviour
         else
         {
 
-            if(Input.GetButtonDown("Fire2") && standing.activeSelf)
+            if(Input.GetButtonDown("Fire2") && standing.activeSelf && abillities.canDash)
             {
                 dashCounter = dashTime;
 
@@ -101,7 +104,7 @@ public class PlayerController : MonoBehaviour
         //Pulando
         // || = or
 
-        if (Input.GetButtonDown("Jump") && (isOnGround || canDoubleJump))
+        if (Input.GetButtonDown("Jump") && (isOnGround || ((canDoubleJump && abillities.canDoubleJump ))))
         {
             if (isOnGround)
             {
@@ -119,15 +122,20 @@ public class PlayerController : MonoBehaviour
         //shoting
         if(Input.GetButtonDown("Fire1"))
         {
+            if(standing.activeSelf)
+            {
             Instantiate(shorToFire,shotPoint.position,shotPoint.rotation).moveDir = new Vector2(transform.localScale.x, 0f);
 
             anim.SetTrigger("shotFired");
+            } else if(ball.activeSelf && abillities.canDropBomb)
+            {
+                Instantiate(bomb, bombPoint.position, bombPoint.rotation);
+            }
         }
-
         //ball mode
         if(!ball.activeSelf)
         {
-            if(Input.GetAxisRaw("Vertical")< -.9f)
+            if(Input.GetAxisRaw("Vertical") < -.9f && abillities.canBecomeBall)
             {
                 ballCounter -= Time.deltaTime;
                 if(ballCounter <= 0)
@@ -151,7 +159,8 @@ public class PlayerController : MonoBehaviour
                     standing.SetActive(true);
                 }
 
-            }else
+            }
+            else
             {
                 ballCounter = waitToBall;
             }

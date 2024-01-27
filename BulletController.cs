@@ -11,6 +11,7 @@ public class BulletController : MonoBehaviour
     
     public GameObject impactEffect;
    
+   public int damageAmount = 1;
 
     // Update is called once per frame
     void Update()
@@ -20,6 +21,11 @@ public class BulletController : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other) 
     {
+        if(other.tag == "Enemy")
+        {
+            other.GetComponent<EnemyHealthController>().DamageEnemy(damageAmount);
+        }
+
         // Quaternion = fala para o unity que não a rotação. 
         if(impactEffect != null)
         {
