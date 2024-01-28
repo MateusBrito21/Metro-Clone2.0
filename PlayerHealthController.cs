@@ -4,9 +4,18 @@ using UnityEngine;
 
 public class PlayerHealthController : MonoBehaviour
 {
-    [HideInInspector]
+    public static PlayerHealthController instance;
+
+    private void Awake() 
+    {
+        instance = this;
+    }
+
+    //[HideInInspector]
     public int currentHealh;
     public int maxHealth;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -18,4 +27,18 @@ public class PlayerHealthController : MonoBehaviour
     {
         
     }
+
+    public void DamagePlayer (int damageAmount)
+    {
+        currentHealh -= damageAmount;
+
+        if(currentHealh <=0)
+        {
+            currentHealh = 0;
+
+            gameObject.SetActive(false);
+        }
+
+    }
+
 }
