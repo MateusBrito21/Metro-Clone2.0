@@ -6,8 +6,13 @@ public class BombController : MonoBehaviour
 {
     public float timeToExplode = .5f;
     public GameObject explosion;
+
     public float blastRange;
     public LayerMask whatIsDestructible;
+
+    public int damageAmount;
+    public LayerMask whatIsDamageable;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -22,21 +27,33 @@ public class BombController : MonoBehaviour
         {
             if(explosion != null)
             {
-            Instantiate(explosion,transform.position, transform.rotation);
+                Instantiate(explosion, transform.position, transform.rotation);
             }
 
             Destroy(gameObject);
-            // Length = []
+
             Collider2D[] objectsToRemove = Physics2D.OverlapCircleAll(transform.position, blastRange, whatIsDestructible);
 
             if(objectsToRemove.Length > 0)
             {
-                // col = colider
                 foreach(Collider2D col in objectsToRemove)
                 {
                     Destroy(col.gameObject);
                 }
             }
+
+            Collider2D[] objectsToDamage = Physics2D.OverlapCircleAll(transform.position, blastRange, whatIsDamageable);
+
+            foreach(Collider2D col in objectsToDamage)
+            {
+                EnemyHealthController enemyHealth = col.GetComponent<EnemyHealthController>();
+                if(enemyHealth != null)
+                {
+                    enemyHealth.DamageEnemy(damageAmount);
+                }
+            }
+
+            AudioManager.instance.PlaySFXAdjusted(4);
         }
     }
 }

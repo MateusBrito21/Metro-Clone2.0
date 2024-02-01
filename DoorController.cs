@@ -70,6 +70,11 @@ public class DoorController : MonoBehaviour
 
         UIController.instance.StartFadeFromBlack();
 
+        PlayerPrefs.SetString("ContinueLevel", levelToLoad);
+        PlayerPrefs.SetFloat("PosX",exitPoint.position.x);
+        PlayerPrefs.SetFloat("Posy",exitPoint.position.y);
+        PlayerPrefs.SetFloat("Posy",exitPoint.position.z);
+
         SceneManager.LoadScene(levelToLoad);
     }
 }

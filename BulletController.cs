@@ -26,11 +26,18 @@ public class BulletController : MonoBehaviour
             other.GetComponent<EnemyHealthController>().DamageEnemy(damageAmount);
         }
 
+        if(other.tag == "Boss")
+        {
+            BossHealthController.instance.TakeDamage(damageAmount);
+        }
+
         // Quaternion = fala para o unity que não a rotação. 
         if(impactEffect != null)
         {
             Instantiate(impactEffect,transform.position, Quaternion.identity);
         }
+
+        AudioManager.instance.PlaySFXAdjusted(3);
         Destroy(gameObject);
     }
 

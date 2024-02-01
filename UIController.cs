@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
@@ -27,8 +27,8 @@ public class UIController : MonoBehaviour
     
     public float fadeSpeed = 2f;
     private bool fadingToBlack, fadingFromBlack;
-
-
+    public string mainMenuScene;
+    public GameObject pauseScreen;
     // Start is called before the first frame update
     void Start()
     {
@@ -56,6 +56,11 @@ public class UIController : MonoBehaviour
                 fadingFromBlack = false;
             }
         }
+
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseUnpause();
+        }
     }
     
     public void UpdateHealth(int currentHealth, int maxHealth)
@@ -76,4 +81,35 @@ public class UIController : MonoBehaviour
         fadingToBlack = false;
     }
 
+
+    public void PauseUnpause()
+    {
+        if (!pauseScreen.activeSelf)
+        {
+            pauseScreen.SetActive(true);
+
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            pauseScreen.SetActive(false);
+
+            Time.timeScale = 1f;
+        }
+    }
+    public void GoToMainMenu()
+    {
+        Time.timeScale = 1f;
+
+        Destroy(PlayerHealthController.instance.gameObject);
+        PlayerHealthController.instance = null;
+
+        Destroy(RespawnController.instance.gameObject);
+        RespawnController.instance = null;
+
+        instance = null;
+        Destroy(gameObject);
+
+        SceneManager.LoadScene(mainMenuScene);
+    }
 }

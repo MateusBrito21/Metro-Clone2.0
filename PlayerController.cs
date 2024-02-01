@@ -53,7 +53,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame (Dash)
     void Update()
     {   
-        if(canMove)
+        if(canMove && Time.timeScale !=0)
         {
 
             if(dashRechargeCounter > 0)
@@ -68,6 +68,8 @@ public class PlayerController : MonoBehaviour
                     dashCounter = dashTime;
 
                     ShowAfterimage();
+
+                    AudioManager.instance.PlaySFXAdjusted(7);
                 }
             } 
 
@@ -116,12 +118,16 @@ public class PlayerController : MonoBehaviour
                 if (isOnGround)
                 {
                     canDoubleJump = true;
+
+                    AudioManager.instance.PlaySFXAdjusted(12);
                 }
                 else
                 {
                     canDoubleJump = false;
 
                     anim.SetTrigger("doubleJump");
+
+                    AudioManager.instance.PlaySFXAdjusted(9);
                 }
                 theRB.velocity = new Vector2(theRB.velocity.x, jumpForce);
             }
@@ -134,9 +140,14 @@ public class PlayerController : MonoBehaviour
                 Instantiate(shorToFire,shotPoint.position,shotPoint.rotation).moveDir = new Vector2(transform.localScale.x, 0f);
 
                 anim.SetTrigger("shotFired");
+
+                AudioManager.instance.PlaySFXAdjusted(14);
+
                 } else if(ball.activeSelf && abillities.canDropBomb)
                 {
                     Instantiate(bomb, bombPoint.position, bombPoint.rotation);
+
+                    AudioManager.instance.PlaySFXAdjusted(13);
                 }
             }
             //ball mode
@@ -149,6 +160,8 @@ public class PlayerController : MonoBehaviour
                     {
                         ball.SetActive(true);
                         standing.SetActive(false);
+
+                        AudioManager.instance.PlaySFX(6);
                     }
 
                 }
@@ -165,8 +178,11 @@ public class PlayerController : MonoBehaviour
                     if(ballCounter <= 0)
                     {
                         ball.SetActive(false);
-                    standing.SetActive(true);
+                        standing.SetActive(true);
+
+                        AudioManager.instance.PlaySFX(10);
                     }
+                    
 
                 }
                 else
